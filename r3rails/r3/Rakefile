@@ -1,0 +1,39 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: Rakefile,v 1.3 2007/09/22 15:39:47 jury Exp $>
+#
+# 改定履歴
+# 2007/09/21 (岡村 淳司) 新規作成
+#
+require(File.join(File.dirname(__FILE__), 'config', 'boot'))
+
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+
+require 'tasks/rails'
+
+desc "save fixtures from the current environment database"
+task :"db:fixtures:save" => :environment do
+  pre_defined = Object.subclasses_of(ActiveRecord::Base)
+  Dir["app/models/*.rb"].each {|i|
+    eval File.basename(i, '.rb').classify
+  }
+  (Object.subclasses_of(ActiveRecord::Base) - pre_defined).each{|klass|
+    klass.to_fixture
+  }
+end
+task :save_fixtures => "db:fixtures:save"

@@ -1,0 +1,50 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: show.rhtml,v 1.3 2008/01/26 12:55:03 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/20 (岡村 淳司) [S59] ファイルアップロード
+# 2007/10/11 (岡村 淳司) [S56] 新規作成 アナウンスメンテナンス
+#
+-%>
+<% @title="権限の詳細表示" %>
+<style type="text/css">
+div.comment {
+	border:1px solid gray;
+	width:100%;
+	padding:5px;
+	font-size:x-small;
+}	
+</style>
+<p>
+	<b><label for="">タイトル</label></b><br/>
+	<%= h "No.#{@bulletin_board.id}: #{@bulletin_board.title}" %>
+</p>
+<p>
+	<b><label for="">記事</label></b><br/>
+	<div class="comment">
+		<%= @bulletin_board.comment%>
+	</div>
+</p>
+<p>
+	<b><label for="">公開期間</label></b><br/>
+	<%= f_range  @bulletin_board.opened_at,  @bulletin_board.closed_at %>
+</p>
+
+<%= cameliatk_link_to '編集', {:action => 'edit', :id => @bulletin_board}, {:class => "command"} %> |
+<%= cameliatk_link_to '戻る', {:action => 'list'}, {:class => "command"} %>

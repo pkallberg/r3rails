@@ -1,0 +1,123 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: show_attach_files.rhtml,v 1.3 2008/01/26 12:55:03 jury Exp $>
+#
+# 改定履歴
+# 2007/10/20 (岡村 淳司) [S59] ファイルアップロード
+# 2007/10/11 (岡村 淳司) [S56] 新規作成 アナウンスメンテナンス
+#
+-%>
+<% @title="添付ファイルの編集" %>
+<style>
+.acond{
+	margin:0px;
+	padding:0px;
+}
+div.comment {
+	border:1px solid gray;
+	width:100%;
+	padding:5px;
+	font-size:x-small;
+}
+table.upload {
+	margin-top:20px;
+	margin-left:20px;
+	border-collapse:collapse;
+	font-size:x-small;
+}
+table.upload tr td{
+}
+</style>
+<p>
+	<b><label for="">タイトル</label></b><br/>
+	<%= h "No.#{@bulletin_board.id}: #{@bulletin_board.title}" %>
+</p>
+<p>
+	<b><label for="">記事</label></b><br/>
+	<div class="comment">
+		<%= @bulletin_board.comment%>
+	</div>
+</p>
+<p>
+	<b><label for="">公開期間</label></b><br/>
+	<%= f_range  @bulletin_board.opened_at,  @bulletin_board.closed_at %>
+</p>
+<p>
+	<b><label for="">添付</label></b><br/>
+	<% unless @bulletin_board.attach_files.empty? %>
+	<table class="list">
+		<tbody>
+			<col width="200"><%# 表示名 %>
+			<col width="200"><%# ダウンロード名 %>
+			<col width="200"><%# 実ファイル名 %>
+			<col width="50" ><%# 検疫 %>
+			<col width="50" ><%# 状態 %>
+			<col width="40" ><%# ダウンロード %> 
+			<col width="40" ><%# 削除 %> 
+		</tbody>
+		<tr>
+			<th class="list">表示名</th>
+			<th class="list">ダウンロード名</th>
+			<th class="list">格納ファイル名</th>
+			<th class="list">検疫</th>
+			<th class="list">状態</th>
+			<th class="command">DL</th>
+			<th class="command">削除</th>
+		</tr>
+		<% @bulletin_board.attach_files.each do |file| %>
+		<tr>
+			<td class="list"><%=h file.name %></td>
+			<td class="list"><%=h file.download_name %></td>
+			<td class="list"><%=h file.file_name %></td>
+			<td class="list" align="center"><%=h (file.out_of_quarantine? ? "済み" : "未") %></td>
+			<td class="list" align="center"><%=h (file.enable_attachment? ? "" : "DL不可") %></td>
+			<td class="list" align="center">
+				<%= link_image_to "/plugin_assets/cameliatk_engine/images/down-green.gif",
+						{:action => 'get_attach_file', :id => file.id  },
+						{:method => :post, :class => "command", :alt=>"ダウンロード", :border=>0, :cameliatk_loading => false} %>
+			</td>
+			<td class="list" align="center">
+				<%= link_image_to "/plugin_assets/cameliatk_engine/images/delete-page-red.gif",
+						{:action => 'remove_attach_file', :id => @bulletin_board.id, :file_id => file.id  },
+						{:confirm => "ファイル「#{file.name}」を削除します。\n削除してよろしいですか？", :method => :post, :class => "command", :alt=>"削除", :border=>0, :cameliatk_loading => true}
+				%>
+			</td>
+		</tr>
+		<% end %>
+	</table>
+	<% else %>
+	添付ファイルはありません。
+	<% end %>
+	<table class="upload">
+	<% cameliatk_form_tag({:action=>'add_attach_file', :id=>@bulletin_board}, {:multipart => true})do %>
+	<tr><td>ファイル</td><td><%= file_field_tag "upload_file", {:style=>"background-color:#DDDDDD;", :size=>80, :onchange=>"$('download_name').value = getDownloadName(this.value);"}%></td></tr>
+	<tr><td>名前</td><td><%= text_field_tag "display_name", "", {:size=>40, :maxlength=>40} %></td></tr>
+	<tr><td>ダウンロード名</td><td><%= text_field_tag "download_name", "", {:id=>"download_name", :size=>40, :maxlength=>40} %></td></tr>
+	<tr><td colspan="2" align="right"><%= submit_tag  "アップロード" %></td></tr>
+	<% end %>
+	</table>
+</p>
+<script type="text/javascript">
+	function getDownloadName(val) {
+		if (val == "" || val == null) {
+			return "";
+		}
+		return val.split(/[\\\/]/).pop();
+	}
+</script>
+
+<%= cameliatk_link_to '戻る', {:action => 'list'}, {:class => "command"} %>

@@ -1,0 +1,89 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: _form.rhtml,v 1.4 2007/10/16 13:36:01 jury Exp $>
+#
+# 改定履歴
+# 2007/10/15 (岡村 淳司) [故障] ユーザメンテ
+# 2007/10/09 (岡村 淳司) [故障] パスワードが初期化されない
+# 2007/10/05 (岡村 淳司) [故障] パスワードが常に初期化される
+# 2007/10/05 (岡村 淳司) [S52] ロール設定機能
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/07 (岡村 淳司) [S13-2] ロックアウト
+# 2007/09/05 (岡村 淳司) [S13] パスワード有効期限
+# 2007/09/03 (岡村 淳司) 新規作成 [S12] 管理機能 User
+#
+-%>
+<%= error_messages_for 'user' %>
+
+<!--[form:user]-->
+<p>
+	<b><label for="login_id">ログインID:</label></b><br/>
+	<% if @user.id.nil? %>
+	<%= text_field 'user', 'login_id' , {:id=>"login_id", :autocomplete=>"off", :style => "ime-mode:disabled;"} %>
+	<% else %>
+	<%= text_field 'user', 'login_id' , {:id=>"login_id", :readonly =>"readonlly", :style => "ime-mode:disabled;background-color:#DDDDDD;"} %>
+	<% end %>
+</p>
+
+<p>
+	<b><label for="user_name">ユーザ名:</label></b><br/>
+	<%= text_field 'user', 'name'  %>
+</p>
+
+<p>
+	<b>初期パスワード:</b><br/>
+	<span id="user_password_issued_label" style="color:red;font-weight:bold;<%= "display:none;" unless @user.password_issued %>">次回ログイン時にパスワード変更が必要<br/></span>
+	<%= hidden_field_tag "user[password_issued]", @user.password_issued.to_s , {:id => "user_password_issued"}%>
+	<%= hidden_field_tag "password_changed", "false" , {:id => "password_changed"}%>
+	<%= text_field_tag 'password', params[:password],
+		{:id=>"password", :readonly=>"true", :style=>"background-color:#DDDDDD;display:none;#{params[:password].blank? ? 'display:none;' : 'display:inline;'}"} %>
+	<%= text_field_tag 'password_dummy' , "**********", 
+		{:id=>"password_dummy", :readonly=>"true", :style=>"background-color:#DDDDDD;#{params[:password].blank? ? 'display:inline;' : 'display:none;'}"} %>
+	<%= link_to_remote "新パスワードを発行する", :url => {:action => 'new_password'} %>
+</p>
+
+<p>
+	<b><label for="password_term_valid">有効期限:</label></b><br/>
+	<%= text_field_tag 'password_term_valid', f_ymd(@user.password_term_valid) , {:size => 10, :maxlength => 10, :id=>"password_term_valid", :readonly =>"readonlly", :style=>"background-color:#DDDDDD;"} %>
+	<% if @user.remained_days >= 0%>
+		<span id="remained_days"><%= h "あと#{@user.remained_days}日" %></span>
+	<% else %>
+		<span id="remained_days" style="color:red;font-weight:bold;"><%= h "#{@user.remained_days.abs}日超過" %></span>
+	<% end %>
+</p>
+
+<p>
+	<b><label for="user_enable">効力:</label></b><br/>
+	<select id="user_enable" name="user[enable]">
+		<option value="false" <%= 'selected' unless @user.enable %>>無効</option>
+		<option value="true"  <%= 'selected' if @user.enable %>>有効</option>
+	</select>
+</p>
+
+<p>
+	<b><label for="user_admin">管理者ユーザ:</label></b><br/>
+	<select id="user_admin" name="user[admin]">
+		<option value="false" <%= 'selected' unless @user.admin %>>いいえ</option>
+		<option value="true"  <%= 'selected' if @user.admin %>>はい</option>
+	</select>
+</p>
+<p>
+	<b><label for="user_admin">ロール:</label></b><br/>
+	<%= select_tag "user[role_id]", options_for_select(@roles, @user.role_id) %>
+</p>
+<!--[eoform:user]-->
+

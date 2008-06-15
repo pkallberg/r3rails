@@ -1,0 +1,67 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: privileges_roles.yml,v 1.2 2007/10/07 15:57:58 jury Exp $>
+#
+# 改定履歴
+# 2007/10/05 (岡村 淳司) [S53] ロールメンテナンス
+# 2007/09/30 (岡村 淳司) [S47] 新規作成 統合Plugin化 ロール、アクセス権
+#
+join_00000: 
+  role_id: "1"
+  privilege_id: "1"
+join_00001: 
+  role_id: "1"
+  privilege_id: "2"
+join_00002: 
+  role_id: "1"
+  privilege_id: "3"
+join_00003: 
+  role_id: "1"
+  privilege_id: "7"
+join_00004: 
+  role_id: "1"
+  privilege_id: "8"
+join_01000: 
+  role_id: "100"
+  privilege_id: "1000"
+join_01001: 
+  role_id: "100"
+  privilege_id: "1001"
+join_01002: 
+  role_id: "100"
+  privilege_id: "1002"
+join_01003: 
+  role_id: "100"
+  privilege_id: "1003"
+join_01004: 
+  role_id: "100"
+  privilege_id: "1004"
+join_01010: 
+  role_id: "100"
+  privilege_id: "1010"
+join_01011: 
+  role_id: "100"
+  privilege_id: "1011"
+join_01012: 
+  role_id: "100"
+  privilege_id: "1012"
+join_01013: 
+  role_id: "100"
+  privilege_id: "1013"
+join_01014: 
+  role_id: "100"
+  privilege_id: "1014"
+  

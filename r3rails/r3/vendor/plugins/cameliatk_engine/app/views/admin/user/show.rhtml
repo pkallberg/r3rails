@@ -1,0 +1,71 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: show.rhtml,v 1.3 2008/01/26 12:55:01 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/05 (岡村 淳司) [S52] ロール設定機能
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/05 (岡村 淳司) [S13] パスワード有効期限
+# 2007/09/03 (岡村 淳司) 新規作成 [S12] 管理機能 User
+#
+-%>
+<% @title="ユーザの詳細表示" %>
+<p>
+	<b>ログインID:</b><br/>
+	<%=h @user.login_id %>
+</p>
+<p>
+	<b>ユーザ名:</b><br/>
+	<%=h @user.name %>
+</p>
+<% if @user.password_issued %>
+<p>
+	<b>パスワード:</b><br/>
+	<span style="color:red;font-weight:bold;">次回ログイン時にパスワード変更が必要</span>
+</p>
+<% end %>
+<p>
+	<b>最終ログイン:</b><br/>
+	<%=h f_ymdhms(@user.last_login_at) %>
+</p>
+<p>
+	<b>有効期限:</b><br/>
+	<%= h f_ymd(@user.password_term_valid) %>
+	<% if @user.remained_days >= 0%>
+	<%= h "あと#{@user.remained_days}日" %>
+	<% else %>
+	<span style="color:red;font-weight:bold;"><%= h "#{@user.remained_days.abs}日超過" %></span>
+	<% end %>
+</p>
+<p>
+	<b>効力:</b><br/>
+	<%= "有効" if @user.enable %><%= "無効" unless @user.enable %>
+</p>
+<p>
+	<b>管理者:</b><br/>
+	<%="★" if @user.admin %>
+</p>
+<p>
+	<b>ロール:</b><br/>
+	<% if @user.role %>
+	<%= h @user.role.name %>
+	<% end %>
+</p>
+
+<%= cameliatk_link_to '編集', {:action => 'edit', :id => @user}, {:class => "command"} %> |
+<%= cameliatk_link_to '戻る', {:action => 'list'}, {:class => "command"} %>
