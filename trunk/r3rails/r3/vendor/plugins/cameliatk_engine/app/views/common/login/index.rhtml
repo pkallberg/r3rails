@@ -1,0 +1,74 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: index.rhtml,v 1.4 2007/10/16 13:35:08 jury Exp $>
+#
+# 改定履歴
+# 2007/10/16 (岡村 淳司) [S51] Framework機能拡充 SoftForward
+# 2007/10/01 (岡村 淳司) [S47] メニュー機構
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/19 (岡村 淳司) [故障] レイアウト崩れ
+# 2007/09/19 (岡村 淳司) [S33] コントローラのテスト
+# 2007/09/14 (岡村 淳司) [S26] ログイン画面の独立化
+# 2007/09/14 (岡村 淳司) 新規作成
+#
+-%>
+<% @title = "ログイン" %>
+<% @skip_header = true %>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="centering">
+	<table style="text-align:left;vertical-align:middle;">
+		<tr>
+			<td>
+				<%= image_tag "#{$LOGO[:login]}", {:style=>"margin-right:10px;"} %>
+			</td>
+			<td>
+				<table>
+					<%= form_remote_tag(:url => {:controller => "common/login", :action => "login" },
+										:before => "if(Cameliatk.alertIfProcessing()){return false};$('loading').show();",
+								 		:html => {:id =>"login_form", :autocomplete=>"off"}) %>
+					<tr>
+						<td>ID:</td>
+						<td><%= text_field_tag "login_id", "", {:size=>10 , :maxlength=>20, :class => "", :style => "ime-mode:off;" } %></td>
+					</tr>
+					<tr>
+						<td>Password:</td>
+						<td><%= password_field_tag "password", "", {:size=>10 , :maxlength=>20, :class => ""} %></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<div style="height:20px;margin-top:10px;">
+		<%= submit_tag "ログイン", {:id => "do_login", :onclick => ""} %>
+		<%= button_to_function "キャンセル", "$('login_id').value='';$('password').value='';$('login_form').focusFirstElement();" %>
+	</div>
+	
+	<div style="margin-top:30px;width:350px;">
+		<%= link_to "初めての方はこちら",
+			{:controller => "common/user", :action=>"registration"},
+			{:id => 'go_user_regist', :onclick => "$('loading').show()" } %>
+	
+		<script type="text/javascript">
+			$('login_form').focusFirstElement();
+		</script>
+	</div>
+</div>

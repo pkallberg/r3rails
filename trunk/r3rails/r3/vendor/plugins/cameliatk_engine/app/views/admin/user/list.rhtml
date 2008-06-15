@@ -1,0 +1,105 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: list.rhtml,v 1.2 2008/01/26 12:55:02 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/07 (岡村 淳司) [S13-2] ロックアウト
+# 2007/09/05 (岡村 淳司) [S13] パスワード有効期限
+# 2007/09/03 (岡村 淳司) 新規作成 [S11] 管理機能 Room
+#
+-%>
+<% @title="ユーザ一覧" %>
+
+<table class="list">
+	<tbody>
+		<col width="100"><%# id %>
+		<col width="200"><%# 名前 %>
+		<col width="100"><%# 最終ログイン %>
+		<col width="100"><%# 有効期限/期限残り %>
+		<col width="100"><%# ログイン失敗回数 %>
+		<col width="100"><%# パスワード新規採番 %>
+		<col width="50"> <%# 効力 無効のみ表示 %>
+		<col width="50"> <%# 管理者区分 %>
+		<col width="100"><%# 備考 %>
+		<col width="40">
+		<col width="40">
+		<col width="40">
+	</tbody>
+
+	<tr>
+		<th class="list">ユーザID</th>
+		<th class="list">ユーザ名</th>
+		<th class="list">最終ログイン</th>
+		<th class="list">有効期限</th>
+		<th class="list">ログイン<br/>失敗回数</th>
+		<th class="list">新規<br/>パスワード</th>
+		<th class="list">効力</th>
+		<th class="list">管理者</th>
+		<th class="list">備考</th>
+		<th class="command"></th>
+		<th class="command"></th>
+		<th class="command"></th>
+	</tr>
+  
+	<% for user in @users %>
+	<tr style="<%= "background-color:#DDDDDD;" unless user.is_enable? %>" >
+	    <td class="list"><%=h user.login_id %></td>
+	    <td class="list"><%=h user.name %></td>
+	    <td class="list" align="center"><%= h f_ymdhms(user.last_login_at) %></td>
+	    <td class="list" align="center">
+	    	<%= h f_ymd(user.password_term_valid) %><br />
+			<% if user.remained_days >= 0%>
+		    	<%= h "あと#{user.remained_days}日" %>
+			<% else %>
+		    	<span style="color:red;font-weight:bold;"><%= h "#{user.remained_days.abs}日超過" %></span>
+			<% end %>
+		</td>
+	    <td class="list" align="center">
+	    	<%= h user.password_faults %>
+		</td>
+	    <td class="list" align="center" style="color:blue;font-weight:bold;">
+	    	<%= h("★") if user.password_issued %>
+		</td>
+		<td class="list" align="center" style="font-weight:bold;color:red;"><%= "無効" unless user.is_enable? %></td>
+	    <td class="list" align="center" style="font-weight:bold;color:red;"><%= "★" if user.admin %></td>
+	    <td class="list" align="center" style="font-weight:bold;color:red;font-size:xx-small;">
+			<%= h "失効" if (user.is_expired? && ! user.is_expired_completely?) %>
+			<%= h "次回ログイン時に無効化" if (user.is_expired_completely?) %>
+		</td>
+		<td class="command"><%= cameliatk_link_to '表示', {:action => 'show', :id => user }, {:class => "command"} %></td>
+		<td class="command"><%= cameliatk_link_to '編集', {:action => 'edit', :id => user }, {:class => "command"} %></td>
+		<td class="command">
+			<% unless user.login_id == 'admin' %>
+			<%= cameliatk_link_to '削除',
+					{:action => 'destroy', :id => user },
+					{:confirm => "#{user.login_id} を削除します。\nこのユーザの予約はすべて削除されます。\n削除してよろしいですか？", :method => :post, :class => "command"} %>
+			<% end %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+<br />
+
+<%= cameliatk_link_to '前ページ', { :page => @user_pages.current.previous }, {:class => "command"} if @user_pages.current.previous %>
+<%= cameliatk_link_to '次ページ', { :page => @user_pages.current.next } , {:class => "command"} if @user_pages.current.next %> 
+
+<br />
+
+<%= cameliatk_link_to 'ユーザの新規登録', {:action => 'new'}, {:class => "command"} %>

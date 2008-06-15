@@ -1,0 +1,37 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: edit.rhtml,v 1.2 2008/01/26 12:55:02 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/06 (岡村 淳司) [S13] パスワード有効期限
+# 2007/09/03 (岡村 淳司) 新規作成 [S12] 管理機能 User
+#
+-%>
+<% @title="ユーザの編集・登録" %>
+
+<% cameliatk_form_tag({:action => 'update', :id => @user},{:id=>"user_edit_form"})do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag '編集内容を登録する' %>
+<% end %>
+<script type="text/javascript">
+	$('user_edit_form').focusFirstElement();	
+</script>
+
+<%= cameliatk_link_to '表示', {:action => 'show', :id => @user}, {:class => "command"} %> |
+<%= cameliatk_link_to '戻る', {:action => 'list'}, {:class => "command"} %>

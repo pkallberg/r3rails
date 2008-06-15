@@ -1,0 +1,38 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: index.rhtml,v 1.4 2008/01/26 12:55:06 jury Exp $>
+#
+# 改定履歴
+# 2007/10/01 (岡村 淳司) [S47] メニュー機構
+# 2007/09/23 (岡村 淳司) [リファクタリング] 基本レイアウト統合
+# 2007/09/21 (岡村 淳司) 新規作成 [S39] ルーティング
+#
+%>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title><%= $WINDOW_TITLE || $CAMLEIATK[:name] %></title>
+</head>
+<body style="margin:0px;">
+	<div style="border:none;background-color:red;float:left;width:185px;height:100%;margin:0px;">
+		<iframe id="menu_frame" src="<%= url_for($VIEWS[:MENU]) %>" height="100%" width="100%" frameborder="no"></iframe>
+	</div>
+	<div style="border:none;background-color:gray;float:left;width:auto;height:100%;margin:0px;">
+		<iframe id="contents_frame" src="<%= url_for($VIEWS[:CURRENT]) %>" height="100%" width="100%" frameborder="no"></iframe>
+	</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: list.rhtml,v 1.2 2008/01/26 12:55:05 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/05 (岡村 淳司) [S53] 新規作成 ロールメンテナンス
+#
+-%>
+<% @title="ロール一覧" %>
+
+<table class="list">
+	<tbody>
+		<col width="200"><%# 名前 %>
+		<col width="40">
+		<col width="40">
+		<col width="40">
+	</tbody>
+
+	<tr>
+		<th class="list">ロール名</th>
+		<th class="command"></th>
+		<th class="command"></th>
+		<th class="command"></th>
+	</tr>
+	
+	<% for role in @roles %>
+	<tr>
+		<td class="list">
+			<%=h role.name %>
+		</td>
+		<td class="command"><%= link_to '表示', {:action => 'show', :id => role }, {:class => "command", :cameliatk_loading => true} %></td>
+		<td class="command"><%= link_to '編集', {:action => 'edit', :id => role }, {:class => "command", :cameliatk_loading => true} %></td>
+		<td class="command">
+			<%= cameliatk_link_to '削除',
+					{:action => 'destroy', :id => role },
+					{:confirm => "#{role.name} を削除します。\n削除してよろしいですか？", :method => :post, :class => "command"} %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+<br />
+
+<%= cameliatk_link_to '前ページ', { :page => @role_pages.current.previous }, {:class => "command"} if @role_pages.current.previous %>
+<%= cameliatk_link_to '次ページ', { :page => @role_pages.current.next } , {:class => "command"} if @role_pages.current.next %> 
+
+<br />
+
+<%= cameliatk_link_to 'ロールの新規登録', {:action => 'new'}, {:class => "command"} %>

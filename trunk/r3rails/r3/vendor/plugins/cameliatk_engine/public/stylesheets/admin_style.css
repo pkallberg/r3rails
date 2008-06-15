@@ -1,0 +1,225 @@
+/*
+ * Copyright @year@ @owner@
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * <@( *) $Id: admin_style.css,v 1.2 2008/01/26 12:55:06 jury Exp $>
+ *
+ * 改定履歴
+ * 2007/10/01 (岡村 淳司) [S47] メニュー機構
+ * 2007/09/16 (岡村 淳司) [S25] カレンダのクローズ
+ * 2007/09/07 (岡村 淳司) [S13-2] ロックアウト
+ * 2007/09/03 (岡村 淳司) 新規作成 [S11] 管理機能 Room
+ */
+ 
+/*
+ * common
+ */
+body {
+	font-family : monospace,monospace,sans-serif ;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color:#FFFFFF;
+}
+
+.contents_header {
+	padding-bottom:10px;
+	padding-top:10px;
+	padding-right:10px;
+	padding-left:10px;
+	margin-bottom:10px;
+	width:100%;
+
+	color:white;
+	font-weight:bold;
+	font-size:x-large;
+	background-color:#FF9999;
+}
+.contents_footer {
+	padding-bottom:10px;
+	padding-top:10px;
+	padding-right:10px;
+	padding-left:10px;
+
+	margin-left:0px;
+	margin-right:0px;
+	
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	width:100%;
+
+	color:white;
+	text-align:right;	
+	font-size:smaller;
+	background-color:#FF9999;
+}
+.contents {
+	text-align:left;
+	margin-left: 10px;
+	margin-right: 10px;
+
+	/*margin: 0px;*/
+	padding: 0px;
+	/*width: 800px;*/
+	height:83%;
+
+	overflow:auto;
+	
+	float: none;
+	/*background-color:#FFCCCC;*/
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+
+  font-size:   13px;
+  line-height: 18px;
+
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+
+  font-size:   13px;
+  line-height: 18px;
+
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+
+  font-size:   13px;
+  line-height: 18px;
+
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+
+  font-size:   13px;
+  line-height: 18px;
+
+}
+
+/*
+ * Listing
+ */
+div.title {
+	font-size:medium;
+	font-weight:bold;
+	margin-bottom: 10px;
+}
+table.list {
+	border-collapse: collapse;
+
+	font-size: 13px;
+}
+th.list {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: none;
+	border-left: none;
+	background-color:#DDDDDD;
+	text-align:center;
+}
+th.command {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: none;
+	border-left: none;
+	background-color:#DDDDDD;
+	text-align:center;
+}
+td.list {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: none;
+	border-left: none;
+
+	font-size: 13px;
+}
+td.command {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: none;
+	border-left: none;
+	
+	text-align: center;
+	font-size: 13px;
+}
+
+/*
+ * Admin Command
+ */
+a.command {
+	color: #000000;
+	font-size: 13px;
+	border:none;
+}
+a.command:visited {
+	color: #000000;
+	font-size: 13px;
+	border:none;
+}
+a.command:hover {
+	color: #FFFFFF;
+	background-color:#FF3333;
+	font-size: 13px;
+}
+
+/*
+ * Calendar admin - link
+ */
+a.calendar_ctrl {
+	color: #FFFFFF;
+	font-size: 10px;
+}
+a.calendar_ctrl:visited {
+	color: #000000;
+	font-size: 10px;
+}
+a.calendar_ctrl:hover {
+	color: #000000;
+	background-color:#FFFFFF;
+	font-size: 10px;
+}
+ 

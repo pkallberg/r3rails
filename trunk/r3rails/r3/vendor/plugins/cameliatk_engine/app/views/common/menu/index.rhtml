@@ -1,0 +1,268 @@
+<%
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: index.rhtml,v 1.3 2007/10/19 14:08:28 jury Exp $>
+#
+# 改定履歴
+# 2007/10/19 (岡村 淳司) [S51] Framework機能の拡充 2度押しガード(サーバサイド)
+# 2007/10/01 (岡村 淳司) [S47] 新規作成 メニュー機構
+# 
+-%>
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<title><%= @title || $CAMLEIATK[:name] %></title>
+<style type='text/css'>
+body {
+	background-color: #FFFFFF;
+	font-family:'MS UI Gothic', monospace;
+	font-size: x-small;
+	font-weight: normal;
+	margin:0px;
+}
+
+.menu_note {
+	color: #003366;
+	background-color: #FFFFFF;
+	font-family:'MS UI Gothic', monospace;
+	font-size: xx-small;
+	font-weight: normal;
+}
+
+a {
+	color: #000000;
+	text-decoration: none;
+	cursor: pointer;
+}
+a:hover {
+	text-decoration: underline;
+	background-color: #c5e1ed;
+}
+
+.level1 {
+	font-size: 100%;
+	font-weight: bold;
+	color: #FFFFFF;
+	margin: 3pt 0pt 1pt 0pt;
+	padding: 5px 5px 5px 5px;
+	border-top:     0px #0099ff solid;
+	border-right:   0px #0099ff solid;
+	border-bottom:  0px #0099ff solid;
+	border-left:    10px #0099ff solid;
+	background-color: #000099;
+}
+.level1 a {
+	color: #FFFFFF;
+	text-decoration: none;
+	display: block;
+	width: 100%;
+}
+.level1 a:hover {
+	background-color: #c5e1ed;
+}
+
+.level2 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 0pt;
+	background-color: #FFFFFF;
+}
+
+.level3 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 10pt;
+	background-color: #FFFFFF
+}
+.level4 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 20pt;
+	background-color: #FFFFFF
+}
+.level5 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 30pt;
+	background-color: #FFFFFF
+}
+.item1 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 0pt;
+	background-color: #FFFFFF;
+}
+.item2 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 10pt;
+	background-color: #FFFFFF;
+}
+.item3 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 20pt;
+	background-color: #FFFFFF
+}
+.item4 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 30pt;
+	background-color: #FFFFFF
+}
+.item5 {
+	font-size: 100%;
+	color: #000000;
+	margin: 1pt 0pt 0pt 40pt;
+	background-color: #FFFFFF
+}
+.columnLeftLevel2 {
+  	float: left;
+	width: 2%;
+  	margin-top: 2.5pt;
+}
+.columnRightLevel2 {
+ 	float: left;
+  	width: 96%;
+}
+.columnLeftLevel3 {
+  	float: left;
+	width: 2%;
+  	margin-top: 2.5pt;
+}
+.columnRightLevel3 {
+ 	float: left;
+  	width: 86%;
+}
+.columnLeftItem1 {
+  	float: left;
+	width: 2%;
+  	margin-top: 2.5pt;
+}
+.columnRightItem1 {
+ 	float: left;
+  	width: 96%;
+}
+.columnLeftItem2 {
+  	float: left;
+	width: 2%;
+  	margin-top: 2.5pt;
+}
+.columnRightItem2 {
+ 	float: left;
+  	width: 86%;
+}
+.columnLeftItem3 {
+  	float: left;
+	width: 2%;
+  	margin-top: 2.5pt;
+}
+.columnRightItem3 {
+ 	float: left;
+  	width: 76%;
+}
+A {text-decoration:none;}
+DIV.forpos {position:relative;}
+DIV.expand1 {font-size:11pt;font-weight:bold;position:absolute;visibility:hidden;left:10pt;}
+DIV.expand2 {font-size:10pt;position:absolute;visibility:hidden;left:20pt;}
+DIV.expand3 {font-size:10pt;position:absolute;visibility:hidden;left:30pt;}
+DIV.expand4 {font-size:10pt;position:absolute;visibility:hidden;left:45pt;}
+.pointer{
+	cursor: pointer;
+}
+</style>
+<%= javascript_include_tag "/plugin_assets/cameliatk_engine/scripts/cameliatk.jp.main.js" %>
+<%= javascript_include_tag "/plugin_assets/cameliatk_engine/scripts/cameliatk.jp.menu.js" %>
+<%= javascript_include_tag :defaults %>
+</head>
+<body>
+<div id="loading" style="display:none"><br/><br/><br/><br/><br/><br/><br/><br/><%= image_tag "loading.gif", {:style => "vertical-align:middle;"} %>&nbsp;&nbsp;&nbsp;Loading...</div>
+<% if is_login? %>
+<script type="text/javascript">
+function __logout__() {
+	new Ajax.Request('<%= url_for(:controller => "common/login", :action => "logout") %>', {asynchronous:true, evalScripts:true, method:"post"});
+}
+</script>
+<table border=0 cellspacing=0 cellpadding=0 hspace=0 vspace=0>
+	<tr>
+		<td>
+			<div id="LOGOUT.image" class="pointer">
+				<%= image_tag "#{$LOGO[:menu]}", {:onclick=>"__logout__();"} %><br/>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div id="LOGOUT.string" align="right" class="pointer" onclick="__logout__();">
+				<span class="menu_note">LOGOUT</span>
+			</div>
+		</td>
+	</tr>
+</table>
+<br/>
+<div style="margin-left:2px;width:100%;">
+<script type="text/javascript" language="JavaScript"><!--
+<%
+  @role.sorted_privileges_list.each do |menu|
+    menu_id = "W#{menu.id}"
+    menu_name = menu.name
+    menu_path = menu.uri
+    menu_parent_id = nil
+	menu_parent_id = "W#{menu.parent_id}" if menu.parent_id
+	if menu.is_menu?
+-%>
+var <%= menu_id %> = new WebFXTree('<%= menu_id %>','<%= menu_name %>');
+<%
+	elsif menu.is_item?
+-%>
+var <%= menu_id %> = new WebFXTreeItem('<%= menu_id %>','<%= menu_name %>','<%= menu_path %>');
+<%= menu_id %>.target = "contents_frame";
+<%
+	end
+	unless menu_parent_id.nil?
+-%>
+<%= menu_parent_id %>.add(<%= menu_id %>);
+<%
+	end
+  end
+-%>
+<%
+  @role.top_nodes.each do |menu|
+-%>
+document.write(<%="W#{menu.id}"%>)
+<%
+  end
+-%>
+//--></script>
+</div>
+<br/>
+<div style="position:absolute;bottom:0px;;eft:0px;">
+	<div>
+		<span class="menu_note" style="margin-left:2px;">ようこそ <span style="text-decoration:underline;"><%= get_login_user_info()[:username] %></span> 様</span>
+	</div>
+	<div>
+		<span class="menu_note" style="margin-left:12px;">（権限:<%= @role.name %>）</span>
+	</div>
+	<div>
+		<span class="menu_note" style="margin-left:2px;">最終ログイン日時</span>
+		<% unless get_login_user_info()[:last_login].nil? || get_login_user_info()[:last_login].empty? %>
+		<span class="menu_note"><%= get_login_user_info()[:last_login] %></span>
+		<% end %>
+	</div>
+</div>
+
+<% end # end for is_login?%>
+</body>
+</html>

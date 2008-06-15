@@ -1,0 +1,142 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: edit_personal.rhtml,v 1.7 2008/01/26 12:55:02 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/16 (岡村 淳司) [故障] パスワード変更の2回目でパスワードフィールドが化ける
+# 2007/10/14 (岡村 淳司) [リファクタリング] url
+# 2007/10/03 (岡村 淳司) [故障] HardForward後のログインがportalに向かわない
+# 2007/10/01 (岡村 淳司) [S47] メニュー機構
+# 2007/09/27 (岡村 淳司) [S44] 統合Plugin化 2nd
+# 2007/09/08 (岡村 淳司) [故障] レイアウト崩れ
+# 2007/09/19 (岡村 淳司) [故障] レイアウト崩れ
+# 2007/09/09 (岡村 淳司) [S22] 戻るボタン
+# 2007/09/05 (岡村 淳司) [S13] パスワード有効期限 リファクタリング 
+# 2007/09/03 (岡村 淳司) 新規作成 [S9] アカウント属性変更
+#
+-%>
+<div class="login_controll2">
+	<% cameliatk_remote_form_for :user, @user,
+		:url => {:controller=>'', :action=>'regist'},
+		:html => {:id => 'user_registration_form', :autocomplete=>"off" } do |f|%>
+	<table>
+		<tr>
+			<td>
+				ログインID
+			</td>
+			<td>
+				<%= f.hidden_field :id %>
+				<%= f.text_field :login_id , :size=>22, :maxlength=>20, :autocomplete=>"off", :style=>"ime-mode:disabled;", :disabled=>"true"%>
+			</td>
+			<td class="user_property_alert">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				お名前
+			</td>
+			<td>
+				<%= f.text_field :name , :size=>22, :maxlength=>20, :style=>"ime-mode:on;" %>
+			</td>
+			<td class="user_property_alert">
+				必須項目
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<% if @user.is_expired? || @user.password_issued
+					 pwdstyle = ""
+					 chk_name = "password_changed_dummy"
+					 dummy_name = "password_changed"
+					 chk_stat = true
+					 chkbox_opts = {:id=>chk_name, :onclick=>"", :disabled=>"true" }
+				   else
+				   	 pwdstyle = "display:none;" 
+					 chk_name = "password_changed"
+					 dummy_name = "password_changed_dummy"
+					 chk_stat = false
+					 chkbox_opts = {:id=>chk_name, :onclick=>"passwordClick()" }
+				   end
+				%>
+				<%= hidden_field_tag dummy_name, "1" %>
+				<%= check_box_tag chk_name, "1", chk_stat, chkbox_opts%><label for="password_changed">パスワードを変更する</label>
+				<script type="text/javascript">
+					function passwordClick() {
+						$('password1').toggle();
+						$('password2').toggle();
+						$('password').value = '';
+						$('password_verify').value = '';
+					}
+				</script>
+			</td>
+			<td>
+			</td>
+		</tr>
+		<tr id="password1" style="<%= pwdstyle %>">
+			<td>
+				新しいパスワード
+			</td>
+			<td>
+				<%= password_field_tag "password", "", {:id=>"password", :size=>22 , :maxlength=>20, :class => "", :style => "ime-mode:disable;" } %>
+			</td>
+			<td class="user_property_alert">
+				必須項目
+			</td>
+		</tr>
+		<tr id="password2" style="<%= pwdstyle %>">
+			<td>
+				新しいパスワード(確認)
+			</td>
+			<td>
+				<%= password_field_tag "password_verify", "", {:id=>"password_verify", :size=>22 , :maxlength=>20, :class => "", :style => "ime-mode:disable;"} %>
+			</td>
+			<td class="user_property_alert">
+				必須項目
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="left">
+				<% if @force_change_password %>
+				<%= hidden_field_tag "force_change_password", "true" %>
+				<% end %>
+				<%= submit_tag "登録する", {:id => "user_regist", :style=>"float:left;"} %>
+				<%= end_form_tag %>
+				<% if @user.is_expired?  || @user.password_issued %>
+				<%= cameliatk_link_to_remote "ログインせずに戻る",
+					{:url => {:controller => "common/login", :action => "logout"} },
+					{:id => "go_back", :style=>"float:right;"} %>
+				<% end %>
+			</td>
+		</tr>
+	</table>
+	<% end %>
+</div>
+<% if @user.is_expired?  || @user.password_issued %>
+<script type="text/javascript">
+	$('password').focus();
+</script>
+<% else %>
+<script type="text/javascript">
+	$('user_registration_form').focusFirstElement();
+</script>
+<% end %>
