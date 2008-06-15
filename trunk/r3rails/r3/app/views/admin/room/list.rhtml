@@ -1,0 +1,66 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: list.rhtml,v 1.4 2008/01/26 12:56:17 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+# 2007/09/08 (岡村 淳司) [S15] 会議室のプロパティ
+# 2007/09/03 (岡村 淳司) 新規作成 [S11] 管理機能 Room
+#
+-%>
+<%= stylesheet_link_tag 'r3_admin' %>
+
+<% @title="会議室一覧" %>
+<table class="list">
+	<tbody>
+		<col width="150">
+		<col width="100">
+		<col width="50">
+		<col width="40">
+		<col width="40">
+		<col width="40">
+	</tbody>
+	<tr>
+		<th class="list">会議室名</th>
+		<th class="list">電話番号</th>
+		<th class="list">席数</th>
+		<th class="command"></th>
+		<th class="command"></th>
+		<th class="command"></th>
+	</tr>
+
+	<% for room in @rooms %>
+	<tr>
+		<td class="list"><%=h room.name %></td>
+		<td class="list" align="center">
+			<%=h f_empty(room.tel,'--') %>
+		</td>
+		<td class="list" align="center"><%=h room.capacity %>人</td>
+		<td class="command"><%= link_to '表示', {:action => 'show', :id => room }, {:class => "command", :onclick => "$('loading').show()"} %></td>
+		<td class="command"><%= link_to '編集', {:action => 'edit', :id => room }, {:class => "command", :onclick => "$('loading').show()"} %></td>
+		<td class="command"><%= link_to '削除', {:action => 'destroy', :id => room }, {:confirm => "#{room.name} を削除します。よろしいですか？", :method => :post, :class => "command"} %></td>
+	</tr>
+	<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @room_pages.current.previous, :onclick => "$('loading').show()" } if @room_pages.current.previous %>
+<%= link_to 'Next page', { :page => @room_pages.current.next, :onclick => "$('loading').show()" } if @room_pages.current.next %> 
+
+<br />
+
+<%= link_to '会議室の新規登録', {:action => 'new'}, {:class => "command", :onclick => "$('loading').show()"} %>

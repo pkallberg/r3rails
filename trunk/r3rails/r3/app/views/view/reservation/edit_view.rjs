@@ -1,0 +1,95 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: edit_view.rjs,v 1.7 2007/10/19 14:10:52 jury Exp $>
+#
+# 改定履歴
+# 2007/10/19 (岡村 淳司) [S51] 2度押しガード（サーバサイド）
+# 2007/10/09 (岡村 淳司) [故障] Admin以外で予約登録できない
+# 2007/10/05 (岡村 淳司) [S45] 電話会議対応
+# 2007/10/01 (岡村 淳司) [S49] 予約のメンテナンス
+# 2007/08/31 (岡村 淳司) [S6] 排他制御
+# 2007/08/30 (岡村 淳司) 新規作成 [S5-4] 新規予約
+#
+
+page.CellObserver.restart("edit")
+
+page[:token_string].value = @token_string
+
+page[:reservation_id].value = @reservation.id 
+page[:reservation_room_id].value = @reservation.room.id 
+page[:reservation_room_name].value = @reservation.room.name
+page[:reservation_lock_version].value = @reservation.lock_version
+
+page[:reservation_date].value = @reservation.date.strftime("%Y%m%d")
+
+page[:reservation_name].value = @reservation.name 
+
+page[:reservation_user_id].value = @reservation.user_id
+page[:reservation_user_name].value = @reservation.user.name
+
+page[:reservation_description].value = @reservation.description 
+
+page[:reservaiton_regist].disabled = false
+page[:reservaiton_cancel].disabled = @reservation.id.nil?
+
+page[:reservation_name].show
+page[:reservation_name_view].hide
+
+page[:reservation_description].show
+page[:reservation_description_view].hide
+
+# 電話会議
+page[:reservation_use_tel_meeting].checked = @reservation.use_tel_meeting
+# 来客
+page[:reservation_have_a_visitor].checked = @reservation.have_a_visitor
+
+page.replace_html "reservation_user_list", "" 
+selection = ""
+selection << "<select id=\"ult\" onchange=\"$('reservation_user_id').value=this.value\">"
+@editors.each do |editor|
+  selected = ""
+  selected = "selected=\"true\"" if editor.id == @reservation.user.id 
+  selection << "<option value=\"#{editor.id}\" #{selected}>#{editor.name}</option>"
+end
+selection << "</select>"
+page.insert_html :bottom, "reservation_user_list", selection 
+
+# ユニットテーブル制御
+i = 0
+for unit in @units
+  i = i + 1
+  page["edit_unit_#{i}"].set_attribute("x-unitid", "#{unit.id}")
+  if @reservation.has_unit(unit)
+    # 編集対象の予約が押さえているユニットの場合
+    page.CellObserver.select_target("edit", "edit_unit_#{i}")
+  else
+    unless unit.reservation.nil? # 予約がある場合
+      # 他予約が押さえているユニットの場合
+      page["edit_unit_#{i}"][:style][:backgroundColor] = '#C0C0C0'
+      page.CellObserver.set_exclude_on_left("edit", "edit_unit_#{i}")
+    else
+      page["edit_unit_#{i}"][:style][:backgroundColor] = '#FFFFFF'
+    end
+  end
+end
+
+# 表示エフェクト
+#page[:reservation_edit_box].visual_effect :appear, :duration => 0.5
+page[:reservation_edit_box].show
+page[:reservation_name].focus()
+
+page[:loading].hide
+

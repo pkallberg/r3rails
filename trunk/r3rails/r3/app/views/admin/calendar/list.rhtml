@@ -1,0 +1,113 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: list.rhtml,v 1.4 2008/01/26 12:56:16 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+# 2007/09/15 (岡村 淳司) [S25] カレンダのクローズ
+# 2007/09/09 (岡村 淳司) 新規作成 [S18] 予約の開放 
+#
+-%>
+<%= stylesheet_link_tag "r3_navi", :media => "all" %>
+<%= stylesheet_link_tag 'r3_admin' %>
+
+<% @title="カレンダのメンテナンス" %>
+<p style="color: green"><%= flash[:notice] %></p>
+
+<div style="font-weight:bold;height:30px;">
+<%= link_to "<< #{@year - 1}年", {:year => @year - 1}, {:class => "navigator_prev", :onclick => "$('loading').show()"} %>
+<%= "#{@year}年" %>
+<%= link_to "#{@year + 1}年 >>", {:year => @year + 1}, {:class => "navigator_next", :onclick => "$('loading').show()"} %>
+</div>
+<table class="list">
+	<tbody>
+		<col width="150">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+		<col width="50">
+	</tbody>
+	<tr>
+		<th class="list">会議室</th>
+		<% 1.upto(12) do |i| %>
+		<th class="list">
+			<%= h "#{i}月" %><br/>
+		</th>
+		<% end %>
+	</tr>
+	<% for stat in @status %>
+	<%   room = stat[:room] %>
+	<%   units_status = stat[:units_status] %>
+	<tr>
+		<td class="list">
+			<%= h room.name %>
+		</td>
+		<% 1.upto(12) do |i| %>
+		<%   bgcolor = "background-color:#FF9999;" if units_status[i] %>
+		<%   bgcolor = "background-color:#669999;" unless units_status[i] %>
+		<td class="list" style="text-align:center;height:60px;<%= bgcolor %>">
+			<% if units_status[i] %>
+			<div style="height:20px;">開放中</div>
+			<%= link_to_remote "削除する",
+				 { :url => {:controller => "admin/calendar",
+							:action => "delete_units_by_month",
+							:room => room.id,
+							:year => @year,
+							:month => i},
+				  :confirm => "#{room.name} の #{i} 月の予定を削除し、あわせて予約も削除します。よろしいですか？",
+				  :before => "$('loading').show()",
+				  :method => "post"},
+				  :class => "calendar_ctrl" %>
+			<% else %>
+			<div style="height:20px;">未開放</div>
+			<%= link_to_remote "開放する",
+				 { :url => {:controller => "admin/calendar",
+							:action => "open_units_by_month",
+							:room => room.id,
+							:year => @year,
+							:month => i},
+				  :confirm => "#{room.name} の #{i} 月の予定を解放し、予約可能にします。よろしいですか？",
+				  :before => "$('loading').show()",
+				  :method => "post"},
+				  :class => "calendar_ctrl" %>
+			<% end %>
+		</td>
+		<% end %>
+	</tr>
+	<% end %>
+</table>
+
+<br/>
+
+<% form_remote_tag(
+	:url => {:controller => 'admin/calendar', :action => 'open_units_all_by_month'},
+	:confirm => '指定された月のすべての会議室の予定をすべて解放します。よろしいですか？',
+	:before => "$('loading').show()") do %>
+	すべての会議室をまとめて解放する:
+	<%= hidden_field_tag "year", @year %>
+	<%= select_tag "month", options_for_select(month()) %>
+	<%= submit_tag '開放する' %>
+<% end %>

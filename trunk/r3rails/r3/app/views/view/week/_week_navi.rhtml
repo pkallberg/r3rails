@@ -1,0 +1,57 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: _week_navi.rhtml,v 1.2 2007/10/02 13:55:06 jury Exp $>
+#
+# 改定履歴
+# 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+# 2007/09/22 (岡村 淳司) [S41] コンポーネント配置見直し
+# 2007/09/21 (岡村 淳司) [**] もろもろカイゼン
+# 2007/09/18 (岡村 淳司) 新規作成 [S14] Week View
+#
+-%>
+<%= stylesheet_link_tag "r3_navi", :media => "all" %>
+<div id="contents_navigator" class="navigator">
+	<div style="display:inline">
+	<%
+		pyear, pweek = prev_week(@year, @week_no)
+		nyear, nweek = next_week(@year, @week_no)
+	%>
+	<%= link_to "<< #{f_week(pyear, pweek)} (#{f_range(week_to_range(pyear, pweek))})",
+		{:controller => "view/week", :action=>"index", :year=> pyear, :week_no => pweek},
+		{:id => 'week_navigator_prev', :class => "navigator_prev", :onclick => "$('loading').show()" } %>
+	</div>
+	|
+	<div style="display:inline">
+	<%= link_to "今日",
+		{:controller => "view/day"},
+		{:id => 'day_navigator_current', :class => "navigator_current", :onclick => "$('loading').show()" } %>
+	</div>
+	|
+	<div style="display:inline">
+	<%= link_to "今週",
+		{:controller => "view/week", :action=>"index"},
+		{:id => 'week_navigator_current', :class => "navigator_current", :onclick => "$('loading').show()" } %>
+	</div>
+	|
+	<div style="display:inline">
+	<%= link_to "#{f_week(nyear, nweek)}(#{f_range(week_to_range(nyear, nweek))}) >>",
+		{:controller => "view/week", :action=>"index", :year=> nyear, :week_no => nweek},
+		{:id => 'week_navigator_next', :class => "navigator_next", :onclick => "$('loading').show()" } %>
+	</div>
+	<%= stylesheet_link_tag "r3_navi", :media => "all" %>
+	<div id="contents_navigator" class="navigator">
+</div>

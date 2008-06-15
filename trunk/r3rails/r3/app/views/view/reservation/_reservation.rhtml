@@ -1,0 +1,237 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: _reservation.rhtml,v 1.8 2007/10/19 14:10:52 jury Exp $>
+#
+# 改定履歴
+# 2007/10/19 (岡村 淳司) [S51] 2度押しガード（サーバサイド）
+# 2007/10/09 (岡村 淳司) [故障] Admin以外で予約登録できない
+# 2007/10/05 (岡村 淳司) [S45] 電話会議のサポート
+# 2007/10/01 (岡村 淳司) [S49] 予約のメンテナンス
+# 2007/09/20 (岡村 淳司) [S29] $R3_CONFIG化 
+# 2007/09/06 (岡村 淳司) [故障] 予約パネルのセンタリング レイアウト分離
+# 2007/09/09 (岡村 淳司) [リファクタリング] reservation分離 
+#
+-%>
+<style>
+.reservation_edit_box {
+	font-family : "MS ゴシック","MS ゴシック",sans-serif ;
+	border:2px double #9999CC;
+	float:left;
+	padding: 10px 10px 10px 10px;
+	margin : 10px 10px 10px 10px;
+	background-color:white;
+	position:absolute;
+}
+.reservation_edit_table {
+	background-color : white;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : x-small;
+	border-collapse : collapse ;
+	width:430px;
+}
+
+.reservation_edit_unit_table {
+	border-collapse : collapse ;
+}
+.reservation_edit_unit_label {
+	font-size: xx-small;
+	font-family : monospace,monospace,sans-serif ;
+	font-weight :bold;
+	text-align  :center;
+	height: 10px;
+	width: 12px;
+}
+.reservation_edit_unit0 {
+	background-color : white;
+	border-right  : 1px dashed #9999CC;
+	border-left   : 1px solid #9999CC;
+	border-top    : 1px solid #9999CC;
+	border-bottom : 1px solid #9999CC;
+	height: 20px;
+	width: 12px;
+}
+.reservation_edit_unit1 {
+	background-color : white;
+	border-right  : 1px solid #9999CC;
+	border-left   : none;
+	border-top    : 1px solid #9999CC;
+	border-bottom : 1px solid #9999CC;
+	height: 20px;
+	width: 12px;
+}
+.reservation_edit_input {
+	font-family : monospace,monospace,sans-serif ;
+	font-size : x-small;
+}
+.reservation_edit_input {
+}
+.reservation_edit_input_readonly {
+	color : black;
+	border-top : none;
+	border-bottom : 1px solid #A9A9A9;
+	border-right : none;
+	border-left : none;
+	
+}
+</style>
+<script type="text/javascript">
+	CellObserver.registSingleMode("edit");
+</script>
+<div id="reservation_edit_box" class="reservation_edit_box" style="display:none;padding-bottom:0px;">
+	<table class="reservation_edit_table">
+		<tbody>
+			<col width="70">
+			<col width="100">
+		</tbody>
+		<tr>
+			<td>会議室:</td>
+			<td>
+				<%= hidden_field_tag "reservation_id", "" %>
+				<%= hidden_field_tag "reservation_room_id", "" %>
+				<%= hidden_field_tag "reservation_date", "" %>
+				<%= hidden_field_tag "reservation_lock_version", "" %>
+				<%= text_field_tag "reservation_room_name", "", {:size => 42, :maxlength => 40, :class => "reservation_edit_input_readonly"} %>
+			</td>
+		</tr>
+		<tr>
+			<td>時間:</td>
+			<td>
+				<table class="reservation_edit_unit_table">
+					<tr >
+					    <% ($R3_UNITS[:start_at]).upto($R3_UNITS[:end_at]) do |i| %>
+						<td class="reservation_edit_unit_label" colspan="2"><%= i %></td>
+						<% end -%>
+					</tr>
+					<tr>
+						<% odd = 1
+							i = 0
+					    	($R3_UNITS[:start_at]).upto($R3_UNITS[:end_at]) do |j|
+					          0.step(59, $R3_UNITS[:term]) do |k|
+								i += 1
+								euid = "edit_unit_#{i}"
+								odd = 1 - odd
+								euclass = "reservation_edit_unit#{odd}"
+						-%>
+						<td id="<%= euid %>" class="<%= euclass %>" x-unitid="<%= i %>">
+						<script type="text/javascript">
+							CellObserver.bindTarget("edit","<%= euid %>");
+						</script>
+						</td>
+						<% 	  end -%> 
+						<% 	end -%> 
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>来客応対:</td>
+			<td>
+				<%= check_box_tag "reservation_have_a_visitor","true","" %>
+			</td>
+		</tr>
+		<tr>
+			<td>件名:</td>
+			<td>
+				<%= text_field_tag "reservation_name", "", {:size => 42, :maxlength => 40, :class => "reservation_edit_input"} %>
+				<%= text_field_tag "reservation_name_view", "", {:style => "display:none;", :readonly =>"readonlly", :size => 42, :maxlength => 40, :class => "reservation_edit_input_readonly"} %>
+			</td>
+		</tr>
+		<tr>
+			<td>メモ:</td>
+			<td>
+				<%= text_area_tag "reservation_description", "", {:rows => 4, :cols => 41, :class => "reservation_edit_input"} %>
+				<%= text_area_tag "reservation_description_view", "", {:style => "display:none;", :readonly =>"readonlly", :rows => 4, :cols => 41, :class => "reservation_edit_input_readonly"} %>
+			</td>
+		</tr>
+		<tr>
+			<td>電話会議</td>
+			<td>
+				<%= check_box_tag "reservation_use_tel_meeting","true","" %>
+			</td>
+		</tr>
+		<tr>
+			<td>予約者:</td>
+			<td>
+				<% if is_admin? %>
+					<%= hidden_field_tag "reservation_user_id", "" %>
+					<%= hidden_field_tag "reservation_user_name" %>
+					<div id="reservation_user_list" style="display:inline;"></div>
+				<% else %>
+					<div id="reservation_user_list" style="display:none;"></div>
+					<%= hidden_field_tag "reservation_user_id", "" %>
+					<%= text_field_tag "reservation_user_name", "", {:size => 32, :maxlength => 40, :class => "reservation_edit_input_readonly"} %>
+				<% end %>
+			</td>
+		</tr>
+		<tr >
+			<script type="text/javascript">
+				function transcriveData() {
+					$('reservation_regist_form').id.value = $F('reservation_id');
+					$('reservation_regist_form').name.value = $F('reservation_name');
+					$('reservation_regist_form').description.value = $F('reservation_description');
+					$('reservation_regist_form').date.value = $F('reservation_date');
+					$('reservation_regist_form').room_id.value = $F('reservation_room_id');
+					$('reservation_regist_form').user_id.value = $F('reservation_user_id');
+					$('reservation_regist_form').lock_version.value = $F('reservation_lock_version');
+					$('reservation_regist_form').have_a_visitor.value = $('reservation_have_a_visitor').checked;
+					$('reservation_regist_form').use_tel_meeting.value = $('reservation_use_tel_meeting').checked;
+					$('reservation_regist_form').selected_units.value =  CellObserver.getSelectedCells('edit').values().join('$');
+				}
+			</script>
+			<td colspan="2" style="height:60px; vertical-align:bottom;">
+				<div style="vertical-align:middle; float:left;">
+					<%= form_remote_tag(:url => {:controller => "view/reservation", :action => "regist" },
+										:before => "$('loading').show()",
+								 		:html => {:id =>"reservation_regist_form"}) %>
+						<%= hidden_field_tag "id", "" %>
+						<%= hidden_field_tag "room_id", "" %>
+						<%= hidden_field_tag "date", "" %>
+						<%= hidden_field_tag "user_id", "" %>
+						<%= hidden_field_tag "name", "" %>
+						<%= hidden_field_tag "description", "" %>
+						<%= hidden_field_tag "lock_version", "" %>
+						<%= hidden_field_tag "have_a_visitor", "" %>
+						<%= hidden_field_tag "use_tel_meeting", "" %>
+						<%= hidden_field_tag "selected_units", "" %>
+						<%= token_field_tag("token_string", {:id=>"token_string"}) %>
+						<%= submit_tag "登録する", {:id => "reservaiton_regist", :onclick => "transcriveData()"} %>
+					<%= end_form_tag %>
+				</div>
+				<div style="vertical-align:middle; float:left;">
+					<%= form_remote_tag(:url => {:controller => "view/reservation", :action => "cancel" },
+										:before => "if(confirm('この予定を取消します。よろしいですか？')){$('reservation_cancel_form').id.value = $F('reservation_id');$('reservation_cancel_form').lock_version.value = $F('reservation_lock_version');$('loading').show();}else{return false}",
+								 		:html => {:id =>"reservation_cancel_form"}) %>
+						<%= hidden_field_tag "id", "" %>
+						<%= hidden_field_tag "lock_version", "" %>
+						<%= submit_tag "取消する", {:id => "reservaiton_cancel"} %>
+					<%= end_form_tag %>
+				</div>
+				<div style="vertical-align:middle;float:right;">
+					<%= button_to_function("閉じる", "$('reservation_edit_box').hide()", {:id => "reservation_close"}) %>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+	new Draggable("reservation_edit_box");
+	w = $('reservation_edit_box').style.width;
+	h = $('reservation_edit_box').style.height;
+	
+	$('reservation_edit_box').style.left = (screen.width -400 - 450)/2 + "px";
+	$('reservation_edit_box').style.top = (screen.height -200 - 400)/2 + 'px';
+</script>
