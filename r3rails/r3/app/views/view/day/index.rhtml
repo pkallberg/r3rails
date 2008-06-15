@@ -1,0 +1,148 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: index.rhtml,v 1.20 2007/10/05 16:26:17 jury Exp $>
+#
+# 改定履歴
+# 2007/10/05 (岡村 淳司) [S45] 電話会議のサポート
+# 2007/10/01 (岡村 淳司) [故障] ポップアップメニュー表示
+# 2007/10/01 (岡村 淳司) [S49] 統合Plugin化 ロール、アクセス権
+# 2007/09/28 (岡村 淳司) [S49] 予定表示機能の見直し
+# 2007/09/22 (岡村 淳司) [リファクタリング] 基本レイアウト統合
+# 2007/09/22 (岡村 淳司) [故障] GLT表示位置
+# 2007/09/22 (岡村 淳司) [故障] 日付Jump
+# 2007/09/13 (岡村 淳司) [S23] sesssion[:date]の解放
+# 2007/09/09 (岡村 淳司) [リファクタリング] reservation分離
+# 2007/09/09 (岡村 淳司) [リファクタリング] 日付書式ユーティリティの移動 
+# 2007/09/08 (岡村 淳司) [S15] 会議室のプロパティ
+# 2007/09/04 (岡村 淳司) [S12] 管理機能 User リファクタリング
+# 2007/09/02 (岡村 淳司) キーナビゲーションサポート
+# 2007/08/31 (岡村 淳司) [S6] 排他制御
+# 2007/08/30 (岡村 淳司) [S5-4] 新規予約
+# 2007/08/20 (岡村 淳司) [S5] 予約編集機能
+# 2007/08/19 (岡村 淳司) [S4] day_view 特定日付対応
+# 2007/08/19 (岡村 淳司) [S3] 予約情報の詳細
+# 2007/08/12 (岡村 淳司) 新規作成
+#
+-%>
+<%= stylesheet_link_tag("r3_reservation", :media => "all") %>
+<% @title = "#{f_ymdw(@day)}の予約状況" %>
+
+<%= render :partial => "view/day/day_navi" %>
+<%= render :partial => "view/using_glt" %>
+
+<%= javascript_include_tag "popupmenu"%>
+<%= javascript_include_tag "cellobserver"%>
+<script type="text/javascript">
+    var popup = null
+	popup = new PopupMenu();
+	popup.setSize(150,0);
+</script>
+<% for room in @all_units_by_room.keys -%>
+<%
+	room_div_id = "room_id_#{room.id}"
+	units = @all_units_by_room[room]
+-%>
+<script type="text/javascript">
+	CellObserver.regist("<%= room_div_id %>");
+	CellObserver.setContextMenu("<%= room_div_id %>", popup);
+</script>
+<div id="<%= room_div_id %>" class="day_view_box">
+	<div style="text-align:center;">
+		<span title="席数:<%= h room.capacity %><br/>TEL:<%= h f_empty(room.tel,'--') %>">
+			<%= h room.name %>
+		</span>
+	</div>
+	<% if units.size > 0 -%>
+	<table class="day_view_table">
+		<tbody>
+			<col width="30">
+			<col width="230">
+		</tbody>
+		<tr style="height:10px;" >
+			<th></th>
+			<th></th>
+		</tr>
+		<%
+		odd_or_even = 0
+
+		for unit in units
+		  unit_div_id = "unit_#{unit.id}"
+		  odd_or_even = 1 - odd_or_even
+		  if unit.reservation
+			if is_login? && unit.reservation.user.id == get_login_user_id()
+	          reserved = "day_view_unit_my_reserved"
+			else
+	          reserved = "day_view_unit_other_reserved"
+			end
+			reservationid = unit.reservation.id
+			baloon = html_popup_text(unit.reservation.name, unit.reservation.user.name, unit.reservation.description)
+		  else
+		    reserved = ""
+			reservationid = ""
+			baloon = ""
+          end 
+		-%>
+		<tr class="<%= reserved %>">
+			<td class="day_view_unit_label<%= odd_or_even%>">
+				<%= h(unit.start_at.strftime("%H:%M")) %>
+			</td>
+			<td id="<%= unit_div_id %>" x-date="<%= @day.strftime('%Y%m%d') %>" x-roomid="<%= room.id %>" x-unitid="<%= unit.id %>" x-reservationid="<%= reservationid %>"
+				class="day_view_unit_space<%= odd_or_even%>"
+				title="<%= baloon %>" >
+				<% if unit.reservation -%>
+					<% if unit.reservation.use_tel_meeting -%>
+					<%=image_tag "ico_tel.gif" ,:alt=>"電話会議" %>
+					<% end -%>
+					<% if unit.reservation.have_a_visitor -%>
+					<%=image_tag "ico_visitor.gif" ,:alt=>"来客" %>
+					<% end -%>
+				<%=  h(truncate(unit.reservation ? "#{unit.reservation.name}(#{unit.reservation.user.name.split().first})" : "" , 20)) %>
+				<script type="text/javascript">
+					popup.bind_by_condition(document, "<%= unit_div_id %>");
+					CellObserver.bindTarget("<%= room_div_id %>","<%= unit_div_id %>");
+					CellObserver.setExcludeOnLeft("<%= room_div_id %>","<%= unit_div_id %>");
+				</script>
+				<% else -%>
+				<script type="text/javascript">
+					popup.bind_by_condition(document, "<%= unit_div_id %>");
+					<% if is_login? %>
+					CellObserver.bindTarget("<%= room_div_id %>","<%= unit_div_id %>");
+					<% end %>
+				</script>
+				<% end -%>
+			</td>
+		</tr>
+		<% end -%>
+	</table>
+	<% else -%>
+	<div id="" class="day_view_closed"><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>closed</div>
+	<% end -%>
+</div>
+<% end -%>
+
+<%= render :partial => "view/reservation/reservation" %>
+
+<script type="text/javascript"><!--
+	function hndl() {
+		if (PopupMenu.current == null) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+	document.oncontextmenu = hndl;
+//--></script>

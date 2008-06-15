@@ -1,0 +1,123 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: index.rhtml,v 1.7 2007/10/05 16:26:16 jury Exp $>
+#
+# 改定履歴
+# 2007/10/05 (岡村 淳司) [S45] 電話会議のサポート
+# 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+# 2007/09/22 (岡村 淳司) [リファクタリング] 基本レイアウト統合
+# 2007/09/21 (岡村 淳司) [故障] レイアウト崩れ
+# 2007/09/20 (岡村 淳司) [故障] レイアウト崩れ
+# 2007/09/17 (岡村 淳司) [S14] Week View
+#
+-%>
+<% require 'date/holiday' %>
+
+<%= stylesheet_link_tag("r3_reservation", :media => "all") %>
+<% @title = "#{f_week(@year, @week_no)} の予約状況" %>
+
+<%= render :partial => "view/week/week_navi" %>
+<%= render :partial => "view/using_glt" %>
+
+<% @weeks.each do |day| %>
+<% day_link = url_for(:controller=>"view/day", :action => "index", :date => f_ymd_raw(day[:date]) ) %>
+<% td="background-color:#FF9999;" if day[:date] == Date.today %>	  
+<% if day[:date].national_holiday? || day[:date].wday == 0 || day[:date].wday == 6
+	 bgc="#DDDDDD"
+   else
+	 bgc="#FFFFFF"
+   end
+   bg="background-color:#{bgc};"
+%>	  
+<div
+	class="week_view_day_box"
+	style="<%= bg %>"
+	onmouseover="this.style.backgroundColor='yellow'"
+	onmouseout="this.style.backgroundColor='<%= bgc%>'"
+	onclick="$('loading').show();window.location.href='<%= day_link %>'" >
+<div class="week_view_day_label" style="<%= "#{td}" %>"><%= h f_ymdw(day[:date]) %></div>
+<div style="float:left;">
+<table class="week_view_table">
+	<tr>
+		<td class="week_view_room_name">&nbsp;</td>
+	</tr>
+	<% odd_or_even = 0 %>
+	<% ($R3_UNITS[:start_at]).upto($R3_UNITS[:end_at]) do  |i|
+	      0.step(59, $R3_UNITS[:term]) do |j|
+	        odd_or_even = 1 - odd_or_even %>
+	<tr>
+		<td class="<%= "week_view_unit_label#{odd_or_even}" %>"><%= "#{sprintf("%02d",i)}:00" if odd_or_even == 1%></td>
+	</tr>
+	<% 	  end
+	    end %>
+</table>
+</div>
+<% all_units = day[:all_units]  -%>
+<% for room in all_units.keys -%>
+<div style="float:left;">
+<table class="week_view_table">
+	<tr>
+		<td class="week_view_room_name" >
+		<%= h room.name%>
+		</td>
+	</tr>
+	<% units = all_units[room]
+	   unless units.empty?
+	     odd_or_even = 0
+	     units.each do |unit|
+	       odd_or_even = 1 - odd_or_even
+	       if unit.reservation
+			 if is_login? && unit.reservation.user.id == get_login_user_id()
+	           reserved = "day_view_unit_my_reserved"
+		     else
+	           reserved = "day_view_unit_other_reserved"
+		     end
+			 baloon = html_popup_text(unit.reservation.name, unit.reservation.user.name, unit.reservation.description)
+		   else
+		     reserved = "day_view_unit_unreserved"
+			 baloon = ""
+           end 
+		%>
+	<tr class="<%= reserved %>">
+		<td class="<%= "week_view_unit_space#{odd_or_even}"%>"
+			title="<%= baloon %>">
+			<% if unit.reservation -%>
+				<% if unit.reservation.use_tel_meeting -%>
+					<span style="float:left;"><%=image_tag "ico_tel.gif",:alt=>"電話会議", :size=>"10x10" %></span>
+				<% end -%>
+				<% if unit.reservation.have_a_visitor -%>
+					<span style="xfloat:right;"><%=image_tag "ico_visitor.gif",:alt=>"来客",:size=>"10x10" %></span>
+				<% end -%>
+			<% end -%>
+		</td>
+	</tr>
+	<%   end
+	   else
+	     ($R3_UNITS[:start_at]).upto($R3_UNITS[:end_at]) do  |i|
+	        0.step(59, $R3_UNITS[:term]) do |j| %>
+	<tr>
+		<td class="week_view_room_closed">&nbsp;</td>
+	</tr>
+	<%      end
+	      end
+	   end %>
+</table>
+</div>
+<% end %>
+
+</div>
+<% end %>

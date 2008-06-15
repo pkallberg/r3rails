@@ -1,0 +1,40 @@
+<%
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: show.rhtml,v 1.4 2008/01/26 12:56:17 jury Exp $>
+#
+# 改定履歴
+# 2007/10/24 (岡村 淳司) [S61] loading
+# 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+# 2007/09/08 (岡村 淳司) [S15] 会議室のプロパティ
+# 2007/09/03 (岡村 淳司) 新規作成 [S11] 管理機能 Room
+#
+-%>
+<%= stylesheet_link_tag 'r3_admin' %>
+<% @title="会議室の詳細表示" %>
+
+<p>
+  <b>会議室名:</b> <%=h @room.name %>
+</p>
+<p>
+  <b>電話番号:</b> <%=h @room.tel %>
+</p>
+<p>
+  <b>席数:</b> <%=h @room.capacity %>人
+</p>
+
+<%= link_to '編集', {:action => 'edit', :id => @room}, {:class => "command", :onclick => "$('loading').show()"} %> |
+<%= link_to '戻る', {:action => 'list'}, {:class => "command", :onclick => "$('loading').show()"} %>
