@@ -1,0 +1,54 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: reservations.yml,v 1.4 2007/10/06 01:34:49 jury Exp $>
+#
+# 改定履歴
+# 2007/10/05 (岡村 淳司) [S45] 電話会議のサポート
+# 2007/08/29 (岡村 淳司) [S5] 予約編集機能
+# 2007/08/14 (岡村 淳司) [S3] 予約情報の詳細
+# 2007/08/11 (岡村 淳司) 新規作成
+#
+reserv1:
+  id: 1
+  name: "[End-End] 朝会"
+  description: "定例ミーティング"
+  user_id: 1
+  room_id: 1
+  date: "2007/07/01"
+reserv2:
+  id: 2
+  name: "[2007上期] 朝会LongLongLongLong"
+  description: "週次進捗会議"
+  user_id: 2
+  room_id: 2
+  date: "2007/07/01"
+reserv3:
+  id: 3
+  name: "[AP維持] 朝会Short"
+  description: "週次進捗会議"
+  user_id: 2
+  room_id: 3
+  date: "2007/07/01"
+reserv4:
+  id: 4
+  name: "[AP維持] 朝会LongLongLongLong"
+  description: "週次進捗会議"
+  user_id: 2
+  room_id: 3
+  date: "2007/07/01"
+  use_tel_meeting: true
+  have_a_visitor: true
+  

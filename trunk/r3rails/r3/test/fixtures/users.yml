@@ -1,0 +1,109 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: users.yml,v 1.7 2007/10/11 16:04:18 jury Exp $>
+#
+# 改定履歴
+# 2007/09/07 (岡村 淳司) [S13-3] 失効、無効 
+# 2007/09/05 (岡村 淳司) [S13] パスワード有効期限
+# 2007/08/22 (岡村 淳司) 新規作成 [S5] ユーザの予約登録機能
+#
+<% require 'digest/sha2' %>
+<% 1.upto(10) do |i| %>
+<% user = "user#{i}" %>
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+<% pass = Digest::SHA256.hexdigest(user + salt) %>
+user_<%= i %>:
+  id: <%= i %>
+  name: "User Name <%= i %>"
+  login_id: "<%= user %>"
+  password_hash: "<%= pass %>"
+  password_salt: "<%= salt %>"
+  password_salt: "<%= salt %>"
+  password_term_valid: "<%= Date.today + 40 %>"
+  role_id: 1
+<% end %>
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+admin:
+  id: <%= 100 %>
+  name: "システム管理者"
+  login_id: "admin"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('admin' + salt) %>"
+  admin: true
+  role_id: 100
+  password_term_valid: "<%= Date.today + 40 %>"
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+disabled:
+  id: <%= 101 %>
+  name: "利用不可ユーザ"
+  login_id: "disabled"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('disabled' + salt) %>"
+  admin: false
+  enable: false
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+expired_warning:
+  id: <%= 102 %>
+  name: "expired warning"
+  login_id: "ex_warn"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('ex_warn' + salt) %>"
+  admin: false
+  enable: true
+  password_term_valid: "<%= Date.today + 3 %>"
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+expired:
+  id: <%= 103 %>
+  name: "expired"
+  login_id: "expired"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('expired' + salt) %>"
+  admin: false
+  enable: true
+  password_term_valid: "<%= Date.today - 7 %>"
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+newpass:
+  id: <%= 104 %>
+  name: "New Password"
+  login_id: "newpass"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('newpass' + salt) %>"
+  admin: false
+  enable: true
+  password_term_valid: "<%= Date.today + 40 %>"
+  password_issued: true
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+abeyance:
+  id: <%= 105 %>
+  name: "失効ユーザ"
+  login_id: "abeyance"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('abeyance' + salt) %>"
+  admin: false
+  enable: true
+  password_term_valid: "<%= Date.today - 5  %>"
+  password_issued: false
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+neglected:
+  id: <%= 106 %>
+  name: "失効期間過ぎて無効"
+  login_id: "neglected"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('neglected' + salt) %>"
+  admin: false
+  enable: true
+  password_term_valid: "<%= Date.today - 10  %>"
+  password_issued: false
