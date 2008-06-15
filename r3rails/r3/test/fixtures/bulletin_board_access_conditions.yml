@@ -1,0 +1,49 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: bulletin_board_access_conditions.yml,v 1.1 2007/10/11 16:04:18 jury Exp $>
+#
+# 改定履歴
+# 2007/10/10 (岡村 淳司) [S36] 新規作成 フィードバック装置（掲示版）
+#
+bbac_00001: 
+  id: 1
+  bulletin_board_id: 1
+  conditions: "params[:user].is_admin?"
+  created_at: 2007-10-10 11:13:32 +09:00
+  updated_at: 2007-10-10 11:13:32 +09:00
+  lock_version: 0
+bbac_00002: 
+  id: 2
+  bulletin_board_id: 1
+  conditions: "params[:user].login_id == params[:login_id]"
+  created_at: 2007-10-10 11:13:32 +09:00
+  updated_at: 2007-10-10 11:13:32 +09:00
+  lock_version: 0
+bbac_00003: 
+  id: 3
+  bulletin_board_id: 2
+  conditions: "params[:user].role.name == \"role1\""
+  created_at: 2007-10-10 11:13:32 +09:00
+  updated_at: 2007-10-10 11:13:32 +09:00
+  lock_version: 0
+bbac_00005: 
+  id: 5
+  bulletin_board_id: 4
+  conditions: "params[:user].is_admin?"
+  created_at: 2007-10-10 11:13:32 +09:00
+  updated_at: 2007-10-10 11:13:32 +09:00
+  lock_version: 0
+  
