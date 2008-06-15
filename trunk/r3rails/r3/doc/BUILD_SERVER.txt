@@ -1,0 +1,269 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: BUILD_SERVER.txt,v 1.1 2007/09/21 14:36:35 jury Exp $>
+#
+# 改定履歴
+# 2007/08/20 (岡村 淳司) 新規作成
+#
+1. FastCGI導入
+
+	http://www.fastcgi.com/ から module をゲット
+
+	$ su -
+	$ tar zxvf fcgi-x.x.x.tar,gz
+	$ cd fcgi-x.x.x
+	$ ./configure
+	$ make
+	$ make install
+
+2. mod_fcgi(mod_fcgid)導入
+
+	http://fastcgi.coremail.cn/ から module をゲット
+
+	$ su -
+	$ tar zxvf mod_fcgid-x.x.x.tar,gz
+	$ cd mod_fcgid-x.x.x
+	$ make
+	$ make install
+
+3. rails環境
+	
+	$ su - 
+	$ tar zxvf gems-x.x.x.tgz
+	$ cd gems-x.x.x
+	$ ruby setup.rb
+	
+	$ gem install rake
+	$ gem install activesupport
+	$ gem install activerecord
+	$ gem install actionpack
+	$ gem install actionmailer
+	$ gem install actionwebservice
+	$ gem install rails
+
+4. ruby-cgi
+	
+	$ tar zxvf ruby-fcgi-x.x.x.tgz
+	$ cd ruby-fcgi-x.x.x
+	$ ruby install.rb config
+	$ ruby install.rb setup
+
+5. /etc/httpd/conf/http.conf
+
+	#
+	# Virtual Hostは断念
+	#
+	LoadModule fcgid_module modules/mod_fcgid.so
+	AddHandler fcgid-script .fcgi
+	<IfModule mod_fcgid.c>
+	    AddHandler fcgid-script .fcgi
+	    IPCCommTimeout 40
+	    IPCConnectTimeout 10
+	    DefaultInitEnv RAILS_ENV production
+	    SocketPath logs/fcgidsock
+	</IfModule>
+
+	NameVirtualHost *:80
+	<VirtualHost *:80>
+	  ServerName localhost
+	  DocumentRoot /usr/local/apache2/htdocs/
+	  Options ExecCGI FollowSymLinks
+	</VirtualHost>
+
+	NameVirtualHost *:3000
+	<VirtualHost *:3000>
+	  ServerName localhost
+	  DocumentRoot /home/webadmin/rails/r3/public/
+	  ErrorLog /home/webadmin/rails/r3/log/server.log
+	  Options ExecCGI FollowSymLinks
+	  AddHandler fastcgi-script .fcgi
+
+	  <Directory "/home/webadmin/rails/r3/public/">
+	    Options ExecCGI FollowSymLinks
+	    AllowOverride all
+	    Order allow,deny
+	    Allow from all
+	  </Directory>
+	</VirtualHost>
+
+	#
+	# 2007/09/20 fcgi for rails
+	#
+	LoadModule fcgid_module modules/mod_fcgid.so
+	AddHandler fcgid-script .fcgi
+	<IfModule mod_fcgid.c>
+	    AddHandler fcgid-script .fcgi
+	    IPCCommTimeout 40
+	    IPCConnectTimeout 10
+	    DefaultInitEnv RAILS_ENV production
+	    SocketPath logs/fcgidsock
+	</IfModule>
+
+	<Directory "/home/webadmin/rails/r3/public/">
+	  Options ExecCGI FollowSymLinks
+	  AllowOverride all
+	  Order allow,deny
+	  Allow from all
+	  <Limit GET POST OPTIONS>
+	      Order allow,deny
+	      Allow from all
+	  </Limit>
+	  <LimitExcept GET POST OPTIONS>
+	      Order deny,allow
+	      Deny from all
+	  </LimitExcept>
+	</Directory>
+	alias /r3 /home/webadmin/rails/r3/public/
+
+	Forbiddenが現れるので、webadmin の HomeDir のパーミッションを 755 に （700だった）
+
+	Internalエラーがでる（error_logに出ている）ので、.htaccessを修正
+		AddHandler を fcgid に変更
+		RewriteEngine のすぐ下に RewriteBase /r3/ を追加
+
+	エラー内容が変わって Invalid command 'RewriteEngine' となる。
+	Rewriteモジュールがないとか有効でないとか。うーむ。
+
+6. VirtualHostリトライ
+	
+	っていうか、ポートバインド忘れてただけじゃないの？
+
+	Listen 81
+
+	LoadModule fcgid_module modules/mod_fcgid.so
+	AddHandler fcgid-script .fcgi
+	<IfModule mod_fcgid.c>
+	    AddHandler fcgid-script .fcgi
+	    IPCCommTimeout 40
+	    IPCConnectTimeout 10
+	    DefaultInitEnv RAILS_ENV production
+	    SocketPath logs/fcgidsock
+	</IfModule>
+
+	#
+	# Virtual Host Rails R3
+	#
+	NameVirtualHost *:3000
+	<VirtualHost *:3000>
+	  ServerName localhost
+	  DocumentRoot /home/webadmin/rails/r3/public/
+	  ErrorLog /home/webadmin/rails/r3/log/server.log
+	  Options ExecCGI FollowSymLinks
+	  AddHandler fastcgi-script .fcgi
+
+	  <Directory "/home/webadmin/rails/r3/public/">
+	    Options ExecCGI FollowSymLinks
+	    AllowOverride all
+	    Order allow,deny
+	    Allow from all
+	  </Directory>
+	</VirtualHost>
+
+7. mod_rewrite 再び
+	
+	http://kazmax.zpp.jp/apache/apache3.html を参照して mod_rewrite をソースからコンパイルして導入
+
+8. FastCGI
+
+	VirutalHost経由でアクセス。
+		[warn] (104)Connection reset by peer: mod_fcgid: read data from fastcgi server error.
+		[error] [client 192.168.33.67] Premature end of script headers: dispatch.fcgi
+	
+	fastcgiサーバにつながっておらぬ様子。
+
+	そういえば、エイリアス設定とVirtualServerと両方で同じリソースの設定をしてたので、片方（エイリアス）を消してみる
+	再起動
+
+	[error] [client 192.168.33.67] mod_rewrite: maximum number of internal redirects reached. Assuming configuration error.
+	 Use 'RewriteOptions MaxRedirects' to increase the limit if neccessary.
+
+	rewriteがchainでloopなのか？
+
+	よくみると .htaccess 内でエイリアス設定のための
+
+	RewriteBase /r3/
+
+	が生きたままだったのでコロす。
+	ようやく Webrick時のポータルにたどり着く。
+
+	ついでに view/day ページを見てみるがinternal errorになる。
+	mysql入れてないので動くわけはないのだがログになんともでないのはちょっと気になる・・・
+	imagesとかにはアクセス可能なのだが。
+
+9. MySQL
+
+	http://honana.com/mysql/50/install.html
+
+	$ ./configure
+	$ ./make
+	$ ./make install
+	
+	あとは四方山の設定をサイトに従って実施(rootのパスワードくらいまで)
+
+	以後は rails App の設定になる。
+
+
+10. MySQL を導入するが動かない
+
+	mod_fcgid: process /home/webadmin/rails/r3/public/dispatch.fcgi(28663) exit(server exited),
+	 terminated by calling exit(), return code: 255
+
+	などと言う。
+	public配下の *.cgi,*.fcgi,*.rb の実行権限を付加
+
+	次は
+
+	Rails Error: Unable to access log file. Please ensure that /home/webadmin/rails/r3/public/../config/../
+	log/production.log exists and is chmod 0666. The log level has been raised to WARN and the output direc
+	ted to STDERR until the problem is fixed.
+	Couldn't write to "/home/webadmin/rails/r3/public/../config/../log/fastcgi.crash.log": starting
+	  Errno::EACCES: Permission denied - /home/webadmin/rails/r3/public/../config/../log/fastcgi.crash.log
+	Permission denied - /home/webadmin/rails/r3/public/../config/../tmp/sessions//ruby_sess.1f3b125f1efa461b
+
+	ログのパーミッションのようだが、ちょっと待て。なぜ、apacheのログにコレがでるの？
+	
+	<VirtualHost *:81>
+	  ServerName localhost
+	  DocumentRoot /home/webadmin/rails/r3/public/
+	  CustomLog    /home/webadmin/rails/r3/log/server.log common
+	  ErrorLog     /home/webadmin/rails/r3/log/error.log
+	  Options ExecCGI FollowSymLinks
+	  AddHandler fastcgi-script .fcgi
+	  AddHandler fcgid-script .rb
+
+	  <Directory "/home/webadmin/rails/r3/public/">
+	    Options ExecCGI FollowSymLinks
+	    AllowOverride all
+	    Order allow,deny
+	    Allow from all
+	  </Directory>
+	</VirtualHost>
+
+	ログの吐き出しを変更。
+	ついでに
+	
+	$RAILS_APP/log
+	$RAILS_APP/tmp
+
+	を 755 に。
+
+	再度アクセスするが、画面が表示されない。よく見ると描画を何度も繰り返しているみたい。
+	ログを確認すると、延々とループしてっぽい。
+	redirectがredirectするみたいな感じ。
+
+	どうも、ruby 1.8.5 のバグっぽい
+	ruby を 1.8.6 に UP
+

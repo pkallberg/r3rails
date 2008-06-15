@@ -1,0 +1,200 @@
+#
+# Copyright @year@ @owner@
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# <@(#) $Id: users.yml,v 1.4 2007/10/12 12:35:24 jury Exp $>
+#
+# 改定履歴
+# 2007/10/05 (岡村 淳司) [故障] cameliatk:migrate時にテーブルがないとエラーになってしまう
+# 2007/09/30 (岡村 淳司) [S47] 新規作成 統合Plugin化 ロール、アクセス権
+#
+<% require 'digest/sha2' %>
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+admin:
+  id: 1
+  name: "システム管理者"
+  login_id: "admin"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest('admin' + salt) %>"
+  admin: true
+  password_issued: false
+  role_id: 1
+  password_term_valid: "<%= Date.today + 40 %>"
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+okamura:
+  <% lid="junji.okamura" %>
+  id: 2
+  name: "岡村 淳司"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 1
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+fujikawa:
+  <% lid="noriaki.fujikawa" %>
+  id: 3
+  name: "藤川 典昭"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+yokoyama:
+  <% lid="keiko.yokoyama" %>
+  id: 4
+  name: "横山 圭子"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+kitayama:
+  <% lid="matsuo.kitayama" %>
+  id: 5
+  name: "北山 松雄"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+oda:
+  <% lid="miyako.oda" %>
+  id: 6
+  name: "織田 美也子"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+katayama:
+  <% lid="shoichi.katayamal" %>
+  id: 7
+  name: "片山 祥一"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+yamazaki:
+  <% lid="tomoaki.yamasaki" %>
+  id: 8
+  name: "山崎 智朗"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+tuji:
+  <% lid="aki.tsuji" %>
+  id: 9
+  name: "辻 亜希"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+asaka:
+  <% lid="daisuke.asaka" %>
+  id: 10
+  name: "浅香 大輔"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+masuda:
+  <% lid="tomohisa.masuda" %>
+  id: 11
+  name: "増田 智久"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+kobayashi:
+  <% lid="daisuke.kobayashi" %>
+  id: 12
+  name: "小林 大輔"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+makinose:
+  <% lid="hiroshi.makinose" %>
+  id: 13
+  name: "牧之瀬 寛"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+<% salt = [Array.new(6){rand(256).chr}.join].pack("m").chomp%>
+yamamoto:
+  <% lid="naoya.yamamoto" %>
+  id: 14
+  name: "山本 尚弥"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2
+iida:
+  <% lid="hiroshi.iida" %>
+  id: 15
+  name: "飯田 裕志"
+  login_id: "<%= lid %>"
+  password_salt: "<%= salt %>"
+  password_hash: "<%= Digest::SHA256.hexdigest(lid + salt) %>"
+  admin: false
+  password_term_valid: "<%= Date.today + 14 %>"
+  password_issued: true
+  role_id: 2

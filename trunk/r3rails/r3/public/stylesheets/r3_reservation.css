@@ -1,0 +1,255 @@
+/*
+ * Copyright @year@ @owner@
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * <@( *) $Id: r3_reservation.css,v 1.3 2007/10/10 12:31:04 jury Exp $>
+ *
+ * 改定履歴
+ * 2007/10/09 (岡村 淳司) [故障] アイコン表示時のレイアウトずれ
+ * 2007/10/05 (岡村 淳司) [S45] 電話会議のサポート
+ * 2007/09/20 (岡村 淳司) [故障] レイアウト崩れ
+ * 2007/09/09 (岡村 淳司) [故障] 予約画面の配置崩れ
+ * 2007/09/04 (岡村 淳司) [S11] 管理機能 Room
+ * 2007/09/02 (岡村 淳司) [S7] キーナビゲーションサポート
+ * 2007/08/31 (岡村 淳司) [S1] ログイン機構 r3.css 分割
+ */
+
+/*
+ * for /view/day
+ */
+.day_view_box {
+	font-family : "MS ゴシック","MS ゴシック",sans-serif ;
+	width:250px;
+	float:left;
+	margin-left:10px;
+	margin-bottom:10px;
+	background-color:#FFFFFF;
+}
+.day_view_closed{
+	border:1px solid #CCCCFF;
+	width:250px;
+	height:360px;
+	vertical-align: middle;
+	text-align: center;
+	background-color: #CCCCFF;
+	margin-top    : 10px;
+	margin-left   : 0px;
+	margin-right  : 0px;
+	margin-bottom : 8px;
+}
+.day_view_table{
+	border-collapse : collapse ;
+}
+.day_view_unit_my_reserved{
+	background-color : #FFCC99;
+}
+.day_view_unit_other_reserved{
+	background-color : #CCCCCC;
+}
+.day_view_unit_unreserved{
+	background-color : #FFFFFF;
+}
+.day_view_unit_label1 {
+	height: 22px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size: xx-small;
+	vertical-align: top;
+	text-align: center;
+	border-top : 1px solid #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px solid #000000;
+	border-bottom : 1px none #000000;
+}
+.day_view_unit_label0 {
+	height: 22px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : xx-small;
+	vertical-align : top;
+	text-align : center;
+	border-top : 1px dashed #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px solid #000000;
+	border-bottom : 1px solid #000000;
+}
+
+.day_view_unit_space1 {
+	height: 22px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : 11px;
+	vertical-align : top;
+	text-align : left;
+	text-align : left;
+	border-top : 1px solid #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px none #000000;
+	border-bottom : 1px none #000000;
+}
+.day_view_unit_space0 {
+	height: 22px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : 11px;
+	vertical-align : top;
+	text-align : left;
+	text-align : left;
+	border-top : 1px dashed #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px none #000000;
+	border-bottom : 1px solid #000000;
+}
+
+/*
+ * for view/week
+ */
+.week_view_table {
+	border-collapse:collapse;
+}
+.week_view_unit_label1 {
+	height: 18px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size: xx-small;
+	vertical-align: top;
+	text-align: center;
+	border-top : 1px solid #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px solid #000000;
+	border-bottom : 1px none #000000;
+}
+.week_view_unit_label0 {
+	height: 18px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : xx-small;
+	vertical-align : top;
+	text-align : center;
+	border-top : 1px dashed #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px solid #000000;
+	border-bottom : 1px solid #000000;
+}
+.week_view_unit_space1 {
+	width: 24px;
+	height: 18px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size: xx-small;
+	vertical-align : top;
+	text-align : left;
+	border-top : 1px solid #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px none #000000;
+	border-bottom : 1px none #000000;
+}
+.week_view_unit_space0 {
+	width: 24px;
+	height: 18px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size: xx-small;
+	vertical-align : top;
+	text-align : left;
+	border-top : 1px dashed #000000;
+	border-right : 1px solid #000000;
+	border-left : 1px none #000000;
+	border-bottom : 1px solid #000000;
+}
+.week_view_day_label {
+	font-size:11px;
+}
+.week_view_room_name {
+	font-size: x-small;
+	text-align: right;
+	vertical-align:middle;
+	writing-mode: tb-rl;
+	height:80px;
+}
+.week_view_room_closed {
+	width: 24px;
+	height: 18px;
+	font-family : monospace,monospace,sans-serif ;
+	font-size: xx-small;
+	vertical-align : top;
+	text-align : left;
+	border-top : 1px solid #CCCCFF;
+	border-right : 1px solid #CCCCFF;
+	border-left : 1px solid #CCCCFF;
+	border-bottom : 1px solid #CCCCFF;
+	background-color:#FFFFFF;
+}
+.week_view_day_box {
+	float:left;
+	margin-right:1px;
+	margin-left:1px;
+	padding:1px;
+}
+
+/*
+ * reservation edit 
+ */
+.reservation_edit_box {
+	font-family : "MS ゴシック","MS ゴシック",sans-serif ;
+	border:2px double #9999CC;
+	float:left;
+	padding: 10px 10px 10px 10px;
+	margin : 10px 10px 10px 10px;
+	background-color:white;
+	position:absolute;
+}
+.reservation_edit_table {
+	background-color : white;
+	font-family : monospace,monospace,sans-serif ;
+	font-size : x-small;
+	border-collapse : collapse ;
+	width:430px;
+}
+
+.reservation_edit_unit_table {
+	border-collapse : collapse ;
+}
+.reservation_edit_unit_label {
+	font-size: xx-small;
+	font-family : monospace,monospace,sans-serif ;
+	font-weight :bold;
+	text-align  :center;
+	height: 10px;
+	width: 12px;
+}
+.reservation_edit_unit0 {
+	background-color : white;
+	border-right  : 1px dashed #9999CC;
+	border-left   : 1px solid #9999CC;
+	border-top    : 1px solid #9999CC;
+	border-bottom : 1px solid #9999CC;
+	height: 20px;
+	width: 12px;
+}
+.reservation_edit_unit1 {
+	background-color : white;
+	border-right  : 1px solid #9999CC;
+	border-left   : none;
+	border-top    : 1px solid #9999CC;
+	border-bottom : 1px solid #9999CC;
+	height: 20px;
+	width: 12px;
+}
+.reservation_edit_input {
+	font-family : monospace,monospace,sans-serif ;
+	font-size : x-small;
+}
+.reservation_edit_input {
+}
+.reservation_edit_input_readonly {
+	color : black;
+	border-top : none;
+	border-bottom : 1px solid #A9A9A9;
+	border-right : none;
+	border-left : none;
+	
+}

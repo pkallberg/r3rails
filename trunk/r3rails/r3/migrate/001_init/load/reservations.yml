@@ -1,0 +1,117 @@
+--- 
+reservation_00025: 
+  name: !binary |
+    44Kk44Oz44OV44Op6YCy5o2X
+
+  updated_at: 2007-09-28 14:03:22 +09:00
+  date: 2007-10-29
+  lock_version: 0
+  id: 25
+  description: ""
+  user_id: 11
+  room_id: 1
+  created_at: 2007-09-28 14:03:22 +09:00
+reservation_00016: 
+  name: !binary |
+    5omT5ZCI44Gb
+
+  updated_at: 2007-09-28 13:56:41 +09:00
+  date: 2007-10-02
+  lock_version: 0
+  id: 16
+  description: ""
+  user_id: 4
+  room_id: 1
+  created_at: 2007-09-28 13:56:41 +09:00
+reservation_00017: 
+  name: !binary |
+    5pel56uL5omT5ZCI44Gb
+
+  updated_at: 2007-09-28 13:57:07 +09:00
+  date: 2007-10-05
+  lock_version: 0
+  id: 17
+  description: ""
+  user_id: 2
+  room_id: 1
+  created_at: 2007-09-28 13:57:07 +09:00
+reservation_00018: 
+  name: !binary |
+    5pel56uL5omT5ZCI44Gb
+
+  updated_at: 2007-09-28 13:57:23 +09:00
+  date: 2007-10-05
+  lock_version: 0
+  id: 18
+  description: ""
+  user_id: 8
+  room_id: 1
+  created_at: 2007-09-28 13:57:23 +09:00
+reservation_00019: 
+  name: "TEL\xE4\xBC\x9A\xE8\xAD\xB0"
+  updated_at: 2007-09-28 14:00:07 +09:00
+  date: 2007-10-01
+  lock_version: 0
+  id: 19
+  description: ""
+  user_id: 4
+  room_id: 1
+  created_at: 2007-09-28 14:00:07 +09:00
+reservation_00020: 
+  name: "PJ\xE9\x80\xB2\xE6\x8D\x97"
+  updated_at: 2007-09-28 14:00:47 +09:00
+  date: 2007-10-01
+  lock_version: 0
+  id: 20
+  description: ""
+  user_id: 3
+  room_id: 1
+  created_at: 2007-09-28 14:00:47 +09:00
+reservation_00021: 
+  name: !binary |
+    44Kk44Oz44OV44Op6YCy5o2X
+
+  updated_at: 2007-09-28 14:01:01 +09:00
+  date: 2007-10-01
+  lock_version: 0
+  id: 21
+  description: ""
+  user_id: 11
+  room_id: 1
+  created_at: 2007-09-28 14:01:01 +09:00
+reservation_00022: 
+  name: !binary |
+    44Kk44Oz44OV44Op6YCy5o2X
+
+  updated_at: 2007-09-28 14:02:07 +09:00
+  date: 2007-10-09
+  lock_version: 0
+  id: 22
+  description: ""
+  user_id: 11
+  room_id: 1
+  created_at: 2007-09-28 14:02:07 +09:00
+reservation_00023: 
+  name: !binary |
+    44Kk44Oz44OV44Op6YCy5o2X
+
+  updated_at: 2007-09-28 14:02:32 +09:00
+  date: 2007-10-15
+  lock_version: 0
+  id: 23
+  description: ""
+  user_id: 11
+  room_id: 1
+  created_at: 2007-09-28 14:02:32 +09:00
+reservation_00024: 
+  name: !binary |
+    44Kk44Oz44OV44Op6YCy5o2X
+
+  updated_at: 2007-09-28 14:02:55 +09:00
+  date: 2007-10-22
+  lock_version: 0
+  id: 24
+  description: ""
+  user_id: 11
+  room_id: 1
+  created_at: 2007-09-28 14:02:55 +09:00

@@ -1,0 +1,67 @@
+/*
+ * Copyright @year@ @owner@
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * <@( *) $Id: r3_navi.css,v 1.1 2007/10/02 13:55:32 jury Exp $>
+ *
+ * 改定履歴
+ * 2007/10/02 (岡村 淳司) [S47] 統合Plugin化 ロール、アクセス権
+ * 2007/09/23 (岡村 淳司) [リファクタリング] 基本レイアウト統合
+ * 2007/09/14 (岡村 淳司) [S26] ログイン画面の独立化
+ * 2007/08/31 (岡村 淳司) [S1] ログイン機構 r3.css 分割
+ */
+
+/*
+ * for navigation
+ */
+.navigator {
+	margin-bottom:10px;
+	text-align:center;
+}
+a.navigator_prev {
+	font-family : momonospace,momonospace,sans-serif ;
+	font-size:small;
+	font-weight:bold;
+
+	margin-right:10px;
+	color:black;
+}
+a.navigator_prev:hover {
+	color:white;
+	background-color:#FF9999;
+} 
+a.navigator_next {
+	font-family : momonospace,momonospace,sans-serif ;
+	font-size:small;
+	font-weight:bold;
+
+	margin-left:10px;
+	color:black;
+}
+a.navigator_next:hover {
+	color:white;
+	background-color:#FF9999;
+}
+a.navigator_current {
+	font-family : momonospace,momonospace,sans-serif ;
+	font-size:small;
+	font-weight:bold;
+
+	margin:0px;
+	color:black;
+}
+a.navigator_current:hover {
+	color:white;
+	background-color:#FF9999;
+}
